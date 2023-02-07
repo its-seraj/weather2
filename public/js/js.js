@@ -44,17 +44,24 @@ form.addEventListener('submit', (e) => {
 
         const latitude = data.features[0].geometry.coordinates[1], longitude = data.features[0].geometry.coordinates[0];
         const location = data.features[0].place_name;
-        alert(latitude + longitude + location)
+        // alert(latitude + ', ' + longitude + ', ' + location)
+        const message1 = document.querySelector('#message1')
+        const message2 = document.querySelector('#message2')
+        message1.textContent = `Latitude : ${latitude}, Longitude : ${longitude}`
+        message2.textContent = `Location : ${location}`
 
         fetch(`http://api.weatherstack.com/current?access_key=7fef760a3082832acf24d3d4299d7033&query=${latitude},${longitude}`).then((forecast) => {
             forecast.json().then((forecastData) => {
                 // console.log(forecastData)
+                const weather = document.querySelector('#weather-message')
                 if(forecastData.error){
-                    return console.log(forecastData.error.info)
+                    weather.textContent = forecastData.error.info
+                    // return console.log(forecastData.error.info)
                 }
 
                 const temp = forecastData.body.current.temperature, feelTemp = forecastData.body.current.feelslike, rain = forecastData.body.current.precip * 100;
-                console.log(forecastData.body.current.weather_descriptions + '. It\'s currently ' + temp + ' degrees out. And there is ' + rain + '% chance to rain. And it feels like ' + feelTemp + ' degrees of temperature.');
+                const weather_message = forecastData.body.current.weather_descriptions + '. It\'s currently ' + temp + ' degrees out. And there is ' + rain + '% chance to rain. And it feels like ' + feelTemp + ' degrees of temperature.';
+                weather.textContent = weather_message
             })
         })
     })
